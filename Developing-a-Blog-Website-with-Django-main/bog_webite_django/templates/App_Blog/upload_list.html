@@ -1,0 +1,19 @@
+ {% extends 'base.html' %} 
+{% load custom_filters %}
+{% block title_block %} Home {% endblock %}
+{% block body_block %}
+<h2>Video:</h2>
+
+{% for video in videos %}
+
+<div class="container">
+    <h3 class="text-center mt-2 mb-2">{{video.caption}}</h3>
+        <video class="embed-responsive embed-responsive-16by9" controls="controls" >
+            <source src="/media/{{video.video}}" type="video/mp4" />
+        </video>
+    {% endfor %}
+</div>
+<hr> 
+
+{% endblock %} 
+

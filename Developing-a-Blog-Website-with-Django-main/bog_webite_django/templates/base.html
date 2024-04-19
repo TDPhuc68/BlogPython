@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <title>{% block title_block %} Blogs {% endblock %}</title>
+</head>
+<!-- --- -->
+<body>
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="justify-content: space-between;">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'index' %}"><img src="/media/logo.png" width="75px"></a>
+      </li>
+      {% if user.is_authenticated %}
+  <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          @{{user.username}}
+        </a>
+
+        <form action="{% url 'App_Blog:search_blog' %}" method="get">
+          <input type="text" name="q" placeholder="Search Blog">
+          <button type="submit"> Search Blogs</button>
+        </form>
+
+  <div class="dropdown-menu">
+          <a class="dropdown-item" href="{% url 'App_Blog:create_blog' %}">Write Blog</a>
+          <a class="dropdown-item" href="{% url 'App_Blog:my_blogs' %}">My Blogs</a>
+          <a class="dropdown-item" href="{% url 'App_Login:profile' %}">Your Profile</a>
+          <a class="dropdown-item" href="{% url 'App_Blog:upload_video' %}">UploadVideo</a>
+          <a class="dropdown-item" href="{% url 'App_Blog:upload_list' %}">Video List</a>
+          <hr>
+          <a class="dropdown-item" href="{% url 'App_Login:logout' %}">Logout</a>
+  </div>
+
+  </div>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'App_Login:signup' %}">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'App_Login:login' %}">Login</a>
+      </li>
+      {% endif %}
+
+    </ul>
+    <li class="nav-link">
+      <a class="nav-link youtube-link" href="https://www.youtube.com/@phuctraninh6410/featured">
+        <i class="fa fa-youtube fa-lg"> YouTube </i> <!-- Biểu tượng YouTube, sử dụng Font Awesome -->
+      </a>   
+    </li>
+
+    <li class="nav-link">
+      <a class="nav-link shopee-link" href="https://shopee.vn/?gad_source=1&gclid=Cj0KCQjw2uiwBhCXARIsACMvIU27KkY9gvNQXNh6nRAi7K2OzEywcMEXH0Euv7FGAKjPQWCbqvyvHEEaAm-BEALw_wcB&is_from_login=true">
+        <i class="fa fa-shopping-cart fa-lg"> Shopee </i> <!-- Biểu tượng Shopee, sử dụng Font Awesome -->
+      </a>
+    </li>
+    
+    <li class="nav-link">
+      <a class="nav-link" href="https://www.instagram.com/phucdinh141/">
+        <i class="fa fa-instagram fa-lg"> Instagram </i> <!-- Biểu tượng Instagram, sử dụng Font Awesome -->
+      </a>   
+    </li>
+    
+    
+
+    <div>
+      <input type="checkbox" id="dark-mode" class="input">
+      <label for="dark-mode" class="label">
+        <div class="circle"></div>
+      </label>
+    </div>
+
+  </nav>
+
+  <!-- --- -->
+  <div class="container" style="padding-top:20px">
+    {% block body_block %}
+
+    {% endblock %}
+  </div>
+
+
+  <script>
+    const input = document.querySelector(".input");
+    const body = document.querySelector("body");
+
+    input.checked = JSON.parse(localStorage.getItem("mode"));
+
+    updateBody();
+
+    function updateBody() {
+      if (input.checked) {
+        body.style.background = "black";
+        body.style.color = "white";
+      } else {
+        body.style.background = "white";
+        body.style.color = "black";
+      }
+    }
+
+    input.addEventListener("input", () => {
+      updateBody();
+      updateLocalStorage();
+    });
+
+    function updateLocalStorage() {
+      // localStorage.setItem("mode", input.checked);
+      localStorage.setItem("mode", JSON.stringify(input.checked));
+    }
+  </script>
+
+  <style>
+    .input {
+      visibility: hidden;
+    }
+
+    .label {
+      width: 80px;
+      height: 40px;
+      background: #ddd;
+      cursor: pointer;
+      border-radius: 25px;
+      border: 2px solid #010101;
+    }
+
+    .circle {
+      background-color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      animation: close 0.4s linear forwards;
+    }
+
+    .input:checked+.label {
+      background-color: white;
+    }
+
+    .input:checked+.label .circle {
+      background-color: black;
+      animation: open 0.4s linear forwards;
+    }
+
+    @keyframes open {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(40px);
+      }
+    }
+
+    @keyframes close {
+      0% {
+        transform: translateX(40px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .shopee-link {
+  font-size: 20px; /* Kích thước của nút Shopee */
+  color: rgb(128, 0, 13); /* Màu của nút Shopee */
+    }
+    .nav-link {
+      color: rgb(255, 0, 72); /* Màu chữ */
+    }
+  
+    .youtube-link {
+    
+  font-size: 20px; /* Kích thước của nút Youtube */
+  color: rgb(255, 0, 72); /* Màu biểu tượng YouTube */
+    }
+    .instagram-link {
+  font-size: 20px; /* Kích thước của nút Instagram */
+  color: rgb(255, 0, 72); /* Màu biểu tượng Instagram */
+    }
+
+
+  </style>
+
+</body>
+
+</html>
